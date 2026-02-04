@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Deza Store | Roblox Top Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f2f2f2;
+}
+header img{
+  width:100%;
+  border-radius:0 0 20px 20px;
+}
+.container{padding:16px}
+.card{
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  margin-bottom:16px;
+}
+.menu{
+  display:flex;
+  gap:10px;
+}
+.menu button{
+  flex:1;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  cursor:pointer;
+}
+.active{background:#000;color:#fff}
+.hidden{display:none}
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+.btn{
+  background:#000;
+  color:#fff;
+  padding:14px;
+  border:none;
+  width:100%;
+  border-radius:12px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+}
+.gamepass{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.item{
+  background:#fafafa;
+  border-radius:12px;
+  padding:10px;
+  text-align:center;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.item.active{border-color:#000}
+.avatar{text-align:center;margin:10px 0}
+.avatar img{
+  width:80px;height:80px;border-radius:50%;border:2px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<img src="banner.jpg">
+</header>
+
+<div class="container">
+
+<div class="card">
+<div class="menu">
+<button id="btnRobux" class="active" onclick="showRobux()">Beli Robux</button>
+<button id="btnGamepass" onclick="showGamepass()">Gamepass Brookhaven</button>
+</div>
+</div>
+
+<!-- ROBUX -->
+<div class="card" id="robux">
+<h3>💎 Beli Robux</h3>
+
+<div class="avatar">
+<img id="avatar" src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-Default.png">
+</div>
+
+<input type="text" id="username" placeholder="Username Roblox" oninput="loadAvatar()">
+
+<select id="robuxJumlah">
+<option value="">Pilih Robux</option>
+<option value="100">100 Robux</option>
+<option value="200">200 Robux</option>
+<option value="300">300 Robux</option>
+<option value="500">500 Robux</option>
+<option value="1000">1000 Robux</option>
+</select>
+
+<button class="btn" onclick="beliRobux()">Beli Robux</button>
+</div>
+
+<!-- GAMEPASS -->
+<div class="card hidden" id="gamepass">
+<h3>🔥 Brookhaven Gamepass</h3>
+<img src="banner1.jpg" style="width:100%;border-radius:12px;margin-bottom:10px">
+
+<div class="gamepass">
+<div class="item" onclick="pilih(this,'Penthouse','25000')">🏠 Penthouse<br>25K</div>
+<div class="item" onclick="pilih(this,'Music','30000')">🎵 Music<br>30K</div>
+<div class="item" onclick="pilih(this,'Speed','30000')">⚡ Speed<br>30K</div>
+<div class="item" onclick="pilih(this,'Premium','50000')">⭐ Premium<br>50K</div>
+<div class="item" onclick="pilih(this,'Vehicle','110000')">🚗 Vehicle<br>110K</div>
+<div class="item" onclick="pilih(this,'VIP','140000')">👑 VIP<br>140K</div>
+</div>
+
+<input type="text" id="username2" placeholder="Username Roblox">
+
+<button class="btn" onclick="beliGamepass()">Beli Gamepass</button>
+</div>
+
+</div>
+
+<script>
+let gp="", harga="";
+
+function showRobux(){
+  robux.classList.remove("hidden");
+  gamepass.classList.add("hidden");
+  btnRobux.classList.add("active");
+  btnGamepass.classList.remove("active");
+}
+function showGamepass(){
+  gamepass.classList.remove("hidden");
+  robux.classList.add("hidden");
+  btnGamepass.classList.add("active");
+  btnRobux.classList.remove("active");
+}
+
+function pilih(el,n,h){
+  document.querySelectorAll('.item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  gp=n; harga=h;
+}
+
+async function loadAvatar(){
+  const u=username.value;
+  if(u.length<3)return;
+  const r=await fetch("https://users.roblox.com/v1/usernames/users",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({usernames:[u]})
+  });
+  const d=await r.json();
+  if(!d.data[0])return;
+  avatar.src=`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${d.data[0].id}&size=150x150&format=Png&isCircular=true`;
+}
+
+function beliRobux(){
+  if(!username.value||!robuxJumlah.value){
+    alert("Lengkapi data!");
+    return;
+  }
+  const msg=`Halo Deza Store,
+Beli Robux
+Username: ${username.value}
+Jumlah: ${robuxJumlah.value}`;
+  window.location.href=`https://wa.me/6287897493566?text=${encodeURIComponent(msg)}`;
+}
+
+function beliGamepass(){
+  if(!username2.value||!gp){
+    alert("Lengkapi data!");
+    return;
+  }
+  const msg=`Halo Deza Store,
+Beli Gamepass Brookhaven
+Username: ${username2.value}
+Gamepass: ${gp}
+Harga: Rp${harga}`;
+  window.location.href=`https://wa.me/6287897493566?text=${encodeURIComponent(msg)}`;
+}
+</script>
+
+</body>
+</html>
